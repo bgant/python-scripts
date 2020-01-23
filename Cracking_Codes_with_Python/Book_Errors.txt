@@ -1,0 +1,11 @@
+
+
+
+Page 236: letterMapping1 string is empty because addLettersToMapping() function has no return value. Add "return letterMapping" as last line to addLettersToMapping()
+function and the examples work fine.
+
+Page 240: change letterMapping to intersectedMapping: intersectedMapping = simpleSubHacker.removeSolvedLettersFromMapping(intersectedMapping) 
+
+
+
+
