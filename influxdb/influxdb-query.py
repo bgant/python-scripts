@@ -2,9 +2,9 @@
 
 from influxdb import InfluxDBClient
 
-client = InfluxDBClient(host='localhost', port=8086)
+client = InfluxDBClient(host='influxdb.localdomain', port=8086)
 
-client.switch_database('writetest')
+client.switch_database('test')
 
 #results = client.query('SELECT "x","y","z" FROM "m1" WHERE "location" = \'laundry\'')
 results = client.query('SELECT * FROM "m1"')

@@ -4,12 +4,12 @@ from influxdb import InfluxDBClient
 import random
 
 # Connect to InfluxDB HTTP/HTTPS service:
-client = InfluxDBClient(host='localhost', port=8086)
+client = InfluxDBClient(host='influxdb.localdomain', port=8086)
 #client = InfluxDBClient(host='127.0.0.1', port=8086, username='admin', password='password', ssl=False, verify_ssl=False)
 #client = InfluxDBClient(host='127.0.0.1', port=9999, username='admin', password='password', ssl=True, verify_ssl=True)
 
 # Create database:
-db_name= 'writetest'
+db_name= 'test'
 db_list = client.get_list_database()
 if {'name': db_name} not in db_list:
     print('creating', db_name)
