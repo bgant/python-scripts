@@ -1,0 +1,55 @@
+
+cd source/
+git clone https://github.com/merbanan/rtl_433
+sudo apt-get install libtool libusb-1.0-0-dev librtlsdr-dev rtl-sdr build-essential autoconf cmake pkg-config
+cd rtl_433
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+
+
+rtl_433
+
+time      : 2019-01-10 17:08:46
+model     : Ambient Weather F007TH Thermo-Hygrometer                         House Code: 15            Channel   : 2             Battery   : Ok
+Temperature: 57.7 F      Humidity  : 23 %          Integrity : CRC
+
+
+rtl_433 -f 868M
+
+<nothing found so far>
+
+
+rtl_433 -f 315M
+
+<nothing found so far>
+
+
+rtl_433 -f 915M
+
+time      : 2019-01-10 17:11:35                    brand     : LaCrosse
+model     : TX29-IT      id        : 8
+Battery   : OK           NewBattery: 0             Temperature: -0.4 C       Humidity  : 52 %          Integrity : CRC
+
+
+
+Mono FM:
+rtl_fm -f 92.5e6 -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
+
+Stereo FM:
+rtl_fm -f 92.5e6 -s 200000 -r 48000 | aplay -r 24000 -f S16_LE -c 2
+
+Champaign Weather Radio:
+rtl_fm -f 162.55e6 -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
+
+
+
+Possibly Pager Traffic of some kind???:
+
+rtl_fm -f 929.62e6 -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
+
+rtl_fm -f 929.6e6 -s 200000 -r 48000 | multimon-ng -t raw -a SCOPE -a POCSAG512 -a POCSAG1200 -a POCSAG2400 -f alpha -
+<Need to try other demodulators>
