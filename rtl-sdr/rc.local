@@ -1,0 +1,4 @@
+#!/bin/bash
+# LaCrosse-TX29IT is -R 76 at 915MHz
+rtl_433 -f 915M -R 76 -F syslog::1433 &
+python3 /root/source/python-scripts/rtl-sdr/rtl_433_influxdb_relay.py

@@ -1,0 +1,23 @@
+# /etc/rc.local in systemd on Ubuntu 20.04
+# Source: https://linuxmedium.com/how-to-enable-etc-rc-local-with-systemd-on-ubuntu-20-04/
+#
+# cp rc-local.service /etc/systemd/system/
+# cp rc.local /etc/
+# chmod +x /etc/rc.local
+# systemctl enable rc-local
+# reboot
+
+[Unit]
+ Description=/etc/rc.local Compatibility
+ ConditionPathExists=/etc/rc.local
+
+[Service]
+ Type=forking
+ ExecStart=/etc/rc.local start
+ TimeoutSec=0
+ StandardOutput=tty
+ RemainAfterExit=yes
+ SysVStartPriority=99
+
+[Install]
+ WantedBy=multi-user.target
