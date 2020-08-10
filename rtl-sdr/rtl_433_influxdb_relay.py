@@ -106,7 +106,7 @@ def rtl_433_probe():
 
             point = {
                 "measurement": measurement,
-                "time": datetime.now().isoformat(),
+                "time": datetime.utcnow().isoformat(),
                 "tags": tags,
                 "fields": fields,
             }
