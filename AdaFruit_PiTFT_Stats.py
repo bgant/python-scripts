@@ -11,7 +11,7 @@
 #    sudo pip3 install --upgrade --force-reinstall spidev
 #    sudo apt-get install ttf-dejavu python3-pil python3-numpy
 #    vi /etc/rc.local
-#       sudo python3 /home/pi/AdaFruit_PiTFT_Stats.py &
+#       sudo nice python3 /home/pi/AdaFruit_PiTFT_Stats.py &
 #
 # Source: https://learn.adafruit.com/adafruit-mini-pitft-135x240-color-tft-add-on-for-raspberry-pi/python-setup
 #
@@ -80,7 +80,16 @@ backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
 backlight.value = True
 
-print('Press Ctrl+C to exit script...')
+
+cpu_cores = subprocess.check_output("nproc", shell=True).decode("utf-8")
+def load_color(value):  # Scales with multiple cores 
+        if float(value) > (0.99 + int(cpu_cores)-1):
+            return "#FF0000"
+        elif float(value) > (0.79 + int(cpu_cores)-1):
+            return "#FFFF00"
+        else:
+            return "#00FF00"
+
 
 def percent_color(value):
         if float(value) > 89:
@@ -90,13 +99,6 @@ def percent_color(value):
         else:
             return "#00FF00"
 
-def load_color(value):
-        if float(value) > 0.89:
-            return "#FF0000"
-        elif float(value) > 0.49:
-            return "#FFFF00"
-        else:
-            return "#00FF00"
 
 def temp_color(value):
         if int(value) > 175:   # Pi throttles at 80C and has a Max Temp of 85C
@@ -106,10 +108,13 @@ def temp_color(value):
         else:
             return "#00FF00"
 
+
 buttonA = digitalio.DigitalInOut(board.D23)
 buttonB = digitalio.DigitalInOut(board.D24)
 buttonA.switch_to_input()
 buttonB.switch_to_input()
+
+print('Press Ctrl+C to exit script...')
 
 try:
     while True:
@@ -131,39 +136,35 @@ try:
         #IP = "IP: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
         cmd = "hostname"
         IP = subprocess.check_output(cmd, shell=True).decode("utf-8")
-        IP_Text = "%s.local" % IP.rstrip()
 
         #cmd = "top -bn1 | grep load | awk '{printf \"CPU Load: %.2f\", $(NF-2)}'"
         cmd = "top -bn1 | grep load | awk '{printf \"%.2f\", $(NF-2)}'"
         CPU = subprocess.check_output(cmd, shell=True).decode("utf-8")
-        CPU_Text = "Load:    %2.2f" % float(CPU)
 
         #cmd = "free -m | awk 'NR==2{printf \"Mem: %s/%s MB  %.0f%%\", $3,$2,$3*100/$2 }'"
         cmd = "free -m | awk 'NR==2{printf \"%.0f\", $3*100/$2 }'"
         MemUsage = subprocess.check_output(cmd, shell=True).decode("utf-8")
-        MemUsage_Text = "Mem:    %2i%%" % int(MemUsage)
 
         #cmd = 'df -h | awk \'$NF=="/"{printf "Disk: %d/%d GB  %s", $3,$2,$5}\''
         cmd = 'df -h | awk \'$NF=="/"{print $5}\' | awk -F\'%\' \'{print $1}\''
         Disk = subprocess.check_output(cmd, shell=True).decode("utf-8")
-        Disk_Text = "Disk:     %2i%%" % int(Disk)
 
         cmd = "cat /sys/class/thermal/thermal_zone0/temp |  awk '{printf \"%.0f\", $(NF-0)*9/5000 + 32}'"  # pylint: disable=line-too-long
         Temp = subprocess.check_output(cmd, shell=True).decode("utf-8")
-        Temp_Text = "CPU Temp: %sF" % Temp
-
 
         # Write four lines of text.
         y = top
-        draw.text((x, y), IP_Text, font=font, fill="#FFFFFF")
-        y += font.getsize(IP)[1] + 5
-        draw.text((x, y), CPU_Text, font=font, fill=load_color(CPU))
-        y += font.getsize(CPU)[1] + 5
-        draw.text((x, y), MemUsage_Text, font=font, fill=percent_color(MemUsage))
-        y += font.getsize(MemUsage)[1] + 5
-        draw.text((x, y), Disk_Text, font=font, fill=percent_color(Disk))
-        y += font.getsize(Disk)[1] + 5
-        draw.text((x, y), Temp_Text, font=font, fill=temp_color(Temp))
+        draw.text((x, y), "%s.local" % IP.rstrip(), font=font, fill="#FFFFFF")
+        y += font.getsize(IP)[1] + 6
+        draw.text((x, y), "cores:   %s" % cpu_cores, font=font, fill="#999999")
+        y += font.getsize(IP)[1] + 6
+        draw.text((x, y), "Load:    %2.2f" % float(CPU), font=font, fill=load_color(CPU))
+        y += font.getsize(CPU)[1] + 6
+        draw.text((x, y), "Mem:    %2i%%" % int(MemUsage), font=font, fill=percent_color(MemUsage))
+        y += font.getsize(MemUsage)[1] + 6
+        draw.text((x, y), "Disk:     %2i%%" % int(Disk), font=font, fill=percent_color(Disk))
+        y += font.getsize(Disk)[1] + 6
+        draw.text((x, y), "CPU Temp: %sF" % Temp, font=font, fill=temp_color(Temp))
 
         # Display image.
         disp.image(image, rotation)
