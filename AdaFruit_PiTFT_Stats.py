@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
+# Original Script:
+#    https://github.com/adafruit/Adafruit_CircuitPython_RGB_Display/blob/master/examples/rgb_display_minipitftstats.py
+#
 # Installation:
 #    sudo apt-get install python3-pip
 #    sudo pip3 install --upgrade setuptools
@@ -8,7 +11,7 @@
 #    sudo pip3 install --upgrade --force-reinstall spidev
 #    sudo apt-get install ttf-dejavu python3-pil python3-numpy
 #    vi /etc/rc.local
-#       sudo python3 /home/pi/stats.py &
+#       sudo python3 /home/pi/AdaFruit_PiTFT_Stats.py &
 #
 # Source: https://learn.adafruit.com/adafruit-mini-pitft-135x240-color-tft-add-on-for-raspberry-pi/python-setup
 #
