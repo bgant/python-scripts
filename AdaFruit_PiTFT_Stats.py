@@ -123,7 +123,7 @@ try:
 
         # Playing with the buttons
         if buttonB.value and not buttonA.value:  # just button A pressed
-            draw.rectangle((0, 0, width, height), outline=0, fill="#F65016")
+            draw.rectangle((0, 0, width, height), outline=0, fill="#CC4000")
         if buttonA.value and not buttonB.value:  # just button B pressed
             draw.rectangle((0, 0, width, height), outline=0, fill="#000044")
         if not buttonA.value and not buttonB.value:  # none pressed
@@ -156,7 +156,7 @@ try:
         y = top
         draw.text((x, y), "%s.local" % IP.rstrip(), font=font, fill="#FFFFFF")
         y += font.getsize(IP)[1] + 6
-        draw.text((x, y), "cores:   %s" % cpu_cores, font=font, fill="#999999")
+        draw.text((x, y), "cores:   %s" % cpu_cores, font=font, fill="#BBBBBB")
         y += font.getsize(IP)[1] + 6
         draw.text((x, y), "Load:    %2.2f" % float(CPU), font=font, fill=load_color(CPU))
         y += font.getsize(CPU)[1] + 6
